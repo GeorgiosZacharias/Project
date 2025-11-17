@@ -75,26 +75,41 @@ public class CocktailRepositoryImpl implements Repository<Cocktail> {
     
     public List<Cocktail> getAllCocktails(){
         List<Cocktail> cocktailList = new ArrayList<>();
-        // First call to get the count
-        Cocktail firstCocktail = getObject(0);
-        if (firstCocktail == null) return cocktailList;
         
-        cocktailList.add(firstCocktail);
-        
-        // Create async tasks for remaining cocktails
-        List<CompletableFuture<Cocktail>> futures = new ArrayList<>();
-        for (int i = 1; i < 100; i++) { // Limit to avoid too many requests
-            final int index = i;
-            futures.add(getObjectAsync(index));
+        try {
+            // Single API call to get all cocktails
+            String url = "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail";
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'Get' requests to URL :" + url);
+            System.out.println("Response Code : " + responseCode);
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            JSONObject object = new JSONObject(response.toString());
+            JSONArray drinks = new JSONArray(object.getJSONArray("drinks").toString());
+            
+            System.out.println("Total cocktails to load: " + drinks.length());
+            
+            // Parse all cocktails directly (no threading needed for parsing JSON)
+            for (int i = 0; i < drinks.length(); i++) {
+                String name = drinks.getJSONObject(i).getString("strDrink");
+                String image = drinks.getJSONObject(i).getString("strDrinkThumb");
+                int id = drinks.getJSONObject(i).getInt("idDrink");
+                cocktailList.add(new Cocktail(name, image, id));
+            }
+            
+            System.out.println("Loaded " + cocktailList.size() + " cocktails");
+            
+        } catch (Exception e) {
+            System.out.println(e);
         }
         
-        // Wait for all to complete and collect results
-        List<Cocktail> asyncResults = futures.stream()
-            .map(CompletableFuture::join)
-            .filter(cocktail -> cocktail != null)
-            .collect(Collectors.toList());
-        
-        cocktailList.addAll(asyncResults);
         return cocktailList;
     }
     @Override

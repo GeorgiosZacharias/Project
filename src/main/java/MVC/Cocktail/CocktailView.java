@@ -47,7 +47,6 @@ public class CocktailView extends JFrame {
         this.layout.add(cocktailNames.get(i),BorderLayout.CENTER);
         this.layout.add(btn,BorderLayout.EAST);
         this.panel.add(this.layout,BorderLayout.WEST);
-        this.setVisible(true);
         i++;
     }
 }

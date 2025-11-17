@@ -2,6 +2,7 @@ ObserverPattern\User.class
 ObserverPattern\Observer.class
 ObserverPattern\Subject.class
 Repository\Repository.class
+OS\LaunchPage$1.class
 MVC\Favorites\FavoriteView$1.class
 OS\Linux.class
 MVC\Cocktail\CocktailView$1.class

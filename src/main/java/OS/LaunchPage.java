@@ -18,6 +18,73 @@ public class LaunchPage  implements ActionListener {
     JButton LinuxButton= new JButton("Linux");
     JButton macOSButton= new JButton("macOS");
 
+    private void showLoadingDialog(String osName) {
+        JDialog loadingDialog = new JDialog(frame, "Loading", true);
+        loadingDialog.setLayout(new BorderLayout());
+        loadingDialog.setSize(300, 150);
+        loadingDialog.setLocationRelativeTo(frame);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        
+        JLabel loadingLabel = new JLabel("Loading Cocktails...");
+        loadingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loadingLabel.setFont(new Font(null, Font.BOLD, 16));
+        
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setIndeterminate(true);
+        progressBar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        panel.add(Box.createVerticalGlue());
+        panel.add(loadingLabel);
+        panel.add(Box.createRigidArea(new Dimension(0, 20)));
+        panel.add(progressBar);
+        panel.add(Box.createVerticalGlue());
+        
+        loadingDialog.add(panel, BorderLayout.CENTER);
+        
+        // Load everything in background thread
+        SwingWorker<CocktailView, Void> worker = new SwingWorker<CocktailView, Void>() {
+            @Override
+            protected CocktailView doInBackground() throws Exception {
+                Subject ssubject = new Subject();
+                new User(ssubject);
+                new User(ssubject);
+                new Admin(ssubject);
+                ssubject.setState("Anoi3e " + osName);
+                OperatingSystem OS1 = OSFactory.getOS(osName);
+                OS1.OperationSystem();
+                Singleton singleton = Singleton.getInstance();
+                List<Cocktail> cocktailList = singleton.cocktailRepository.getAllCocktails();
+                
+                // Create view and load everything in background
+                CocktailView cocktailView = new CocktailView();
+                CocktailController cocktailController;
+                for (Cocktail cocktail : cocktailList) {
+                    cocktailController = new CocktailController(cocktail, cocktailView);
+                    cocktailController.updateView();
+                }
+                
+                return cocktailView;
+            }
+            
+            @Override
+            protected void done() {
+                try {
+                    CocktailView cocktailView = get();
+                    loadingDialog.dispose();
+                    cocktailView.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    loadingDialog.dispose();
+                }
+            }
+        };
+        
+        worker.execute();
+        loadingDialog.setVisible(true);
+    }
+
 
 
     public LaunchPage(){
@@ -48,58 +115,15 @@ public class LaunchPage  implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()== WindowsButton){
             frame.dispose();
-            Subject ssubject = new Subject();
-            new User(ssubject);
-            new User(ssubject);
-            new Admin(ssubject);
-            ssubject.setState("Anoi3e window");
-            OperatingSystem OS1 = OSFactory.getOS("Windows");
-            OS1.OperationSystem();
-            Singleton singleton = Singleton.getInstance();
-            CocktailView cocktailView = new CocktailView();
-            CocktailController cocktailController;
-            List<Cocktail> cocktailList = singleton.cocktailRepository.getAllCocktails();
-            for (Cocktail cocktail : cocktailList) {
-                cocktailController = new CocktailController(cocktail, cocktailView);
-                cocktailController.updateView();
-            }
+            showLoadingDialog("Windows");
         }
         if(e.getSource()== LinuxButton){
             frame.dispose();
-            Subject ssubject = new Subject();
-            new User(ssubject);
-            new User(ssubject);
-            new Admin(ssubject);
-            ssubject.setState("Anoi3e linux");
-
-            OperatingSystem OS1 = OSFactory.getOS("Linux");
-            OS1.OperationSystem();
-            Singleton singleton = Singleton.getInstance();
-            CocktailView cocktailView = new CocktailView();
-            CocktailController cocktailController;
-            List<Cocktail> cocktailList = singleton.cocktailRepository.getAllCocktails();
-            for (Cocktail cocktail : cocktailList) {
-                cocktailController = new CocktailController(cocktail, cocktailView);
-                cocktailController.updateView();
-            }
+            showLoadingDialog("Linux");
         }
         if(e.getSource()== macOSButton){
             frame.dispose();
-            Subject ssubject = new Subject();
-            new User(ssubject);
-            new User(ssubject);
-            new Admin(ssubject);
-            ssubject.setState("Anoi3e macOS");
-            OperatingSystem OS1 = OSFactory.getOS("MacOs");
-            OS1.OperationSystem();
-            Singleton singleton = Singleton.getInstance();
-            CocktailView cocktailView = new CocktailView();
-            CocktailController cocktailController;
-            List<Cocktail> cocktailList = singleton.cocktailRepository.getAllCocktails();
-            for (Cocktail cocktail : cocktailList) {
-                cocktailController = new CocktailController(cocktail, cocktailView);
-                cocktailController.updateView();
-            }
+            showLoadingDialog("MacOs");
         }
     }
 }
