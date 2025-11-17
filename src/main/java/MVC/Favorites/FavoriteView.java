@@ -43,20 +43,43 @@ public class FavoriteView extends JFrame{
         new User(ssubject);
         new Admin(ssubject);
 
-        JPanel panel = new JPanel(new FlowLayout());
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         JLabel title = new JLabel("Your favorite cocktails are: ",JLabel.CENTER);
-        List<JLabel> allFavorites = new ArrayList<>();
+        
         for(int i=0;i<favoriteList.size(); i+=2){
-            allFavorites.add(new JLabel("Cocktail: "+ favoriteList.get(i) + " is "+ favoriteList.get(i+1)));
+            final String cocktailName = favoriteList.get(i);
+            final String cocktailType = favoriteList.get(i+1);
+            
+            JPanel itemPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            JLabel label = new JLabel("Cocktail: "+ cocktailName + " is "+ cocktailType);
+            JButton removeButton = new JButton("Remove");
+            removeButton.setBackground(new Color(255, 100, 100));
+            removeButton.setFocusable(false);
+            removeButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    FavoriteController.removeFavorite(cocktailName);
+                    dispose();
+                }
+            });
+            
+            itemPanel.add(label);
+            itemPanel.add(removeButton);
+            panel.add(itemPanel);
         }
-        for (JLabel allFavorite : allFavorites) panel.add(allFavorite);
+        
         JButton back = new JButton("Back");
         back.addActionListener(e -> {this.dispose();});
+        
+        JScrollPane scrollPane = new JScrollPane(panel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        
         this.setSize(500,500);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setLayout(new BorderLayout());
         this.add(title,BorderLayout.NORTH);
-        this.add(panel,BorderLayout.CENTER);
-        panel.add(back,BorderLayout.SOUTH);
+        this.add(scrollPane,BorderLayout.CENTER);
+        this.add(back,BorderLayout.SOUTH);
         this.setVisible(true);
         ssubject.setState("Anoi3e to favorite list tou xrhsth");
     }

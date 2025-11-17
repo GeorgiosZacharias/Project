@@ -149,5 +149,46 @@ public class FavoriteDaoImplementation implements FavoriteDao{
         /*favorites.remove(favorite.getID());
         System.out.println("Favorite with Id: " + favorite.getID() + ", deleted from database");*/
     }
+    
+    public void deleteFavoriteByName(String cocktailName) {
+        try {
+            String resourceName = "src/main/resources/favorites.json";
+            BufferedReader in = new BufferedReader(new FileReader(resourceName));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            
+            org.json.JSONObject object = new org.json.JSONObject(response.toString());
+            org.json.JSONArray favorites = new org.json.JSONArray(object.getJSONArray("Favorites").toString());
+            org.json.JSONArray updatedFavorites = new org.json.JSONArray();
+            
+            // Keep all favorites except the one to delete
+            for (int i = 0; i < favorites.length(); i++) {
+                org.json.JSONObject favorite = favorites.getJSONObject(i);
+                String name = favorite.getString("Cocktail Name");
+                if (!name.equals(cocktailName)) {
+                    updatedFavorites.put(favorite);
+                }
+            }
+            
+            object.put("Favorites", updatedFavorites);
+            
+            Subject ssubject = new Subject();
+            new User(ssubject);
+            new User(ssubject);
+            new Admin(ssubject);
+            ssubject.setState("O xristis diagrapsei ena cocktail apo tin lista");
+            
+            FileWriter file = new FileWriter("src/main/resources/favorites.json");
+            file.write(object.toString());
+            file.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 

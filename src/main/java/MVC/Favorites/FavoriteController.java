@@ -18,5 +18,12 @@ public class FavoriteController {
         singleton.favoriteDao.createFavorite(name,Favorite.valueOf(type));
         favoriteView.showAllFavorites(singleton.favoriteDao.getAllFavorites());
     }
+    
+    public static void removeFavorite(String cocktailName) {
+        Singleton singleton = Singleton.getInstance();
+        singleton.favoriteDao.deleteFavoriteByName(cocktailName);
+        FavoriteView favoriteView = new FavoriteView();
+        favoriteView.showAllFavorites(singleton.favoriteDao.getAllFavorites());
+    }
 
 }

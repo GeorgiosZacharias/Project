@@ -10,6 +10,7 @@ MVC\Cocktail\CocktailView$1.class
 Main.class
 MVC\Favorites\FavoriteController.class
 OS\LaunchPage.class
+MVC\Favorites\FavoriteView$2.class
 Dao\FavoriteDao.class
 MVC\CocktailDetails\DetailsController.class
 Repository\CocktailRepositoryImpl.class
