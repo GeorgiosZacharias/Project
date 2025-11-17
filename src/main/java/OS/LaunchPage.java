@@ -49,7 +49,6 @@ public class LaunchPage  implements ActionListener {
             protected CocktailView doInBackground() throws Exception {
                 Subject ssubject = new Subject();
                 new User(ssubject);
-                new User(ssubject);
                 new Admin(ssubject);
                 ssubject.setState("Anoi3e " + osName);
                 OperatingSystem OS1 = OSFactory.getOS(osName);
