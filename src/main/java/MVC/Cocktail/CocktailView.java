@@ -1,5 +1,8 @@
 package MVC.Cocktail;
 
+import MVC.Favorites.FavoriteView;
+import Singleton.Singleton;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,9 +20,26 @@ public class CocktailView extends JFrame {
         this.panel = new JPanel(new GridLayout(100,3));
         JScrollPane scroll = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.getVerticalScrollBar().setUnitIncrement(20);
+        
+        // Create favorites button at the top
+        JButton viewFavoritesButton = new JButton("View My Favorites");
+        viewFavoritesButton.setFont(new Font(null, Font.BOLD, 14));
+        viewFavoritesButton.setBackground(new Color(100, 200, 100));
+        viewFavoritesButton.setFocusable(false);
+        viewFavoritesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Singleton singleton = Singleton.getInstance();
+                FavoriteView favoriteView = new FavoriteView();
+                favoriteView.showAllFavorites(singleton.favoriteDao.getAllFavorites());
+            }
+        });
+        
         this.setSize(600,600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        add(scroll);
+        this.setLayout(new BorderLayout());
+        add(viewFavoritesButton, BorderLayout.NORTH);
+        add(scroll, BorderLayout.CENTER);
     }
     public void showCocktailData(int id,String cocktailName,Image cocktailImage){
         //Έχω μια λίστα απο κουμπιά cocktailNames για κάθε cocktail
