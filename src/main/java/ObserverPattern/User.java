@@ -8,6 +8,7 @@ public class User extends Observer {
 
     @Override
     public void update() {
+        System.out.println("--------------------");
         System.out.println( "User " + ssubject.getState()  );
     }
 }

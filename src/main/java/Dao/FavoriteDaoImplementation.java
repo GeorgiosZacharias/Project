@@ -85,7 +85,6 @@ public class FavoriteDaoImplementation implements FavoriteDao{
                     object.put("Favorites", favorites);
                     Subject ssubject = new Subject();
                     new User(ssubject);
-                    new User(ssubject);
                     new Admin(ssubject);
                     ssubject.setState("O xristis evale kainourgio cocktail stin lista ");
                     try {
@@ -178,9 +177,9 @@ public class FavoriteDaoImplementation implements FavoriteDao{
             
             Subject ssubject = new Subject();
             new User(ssubject);
-            new User(ssubject);
+         
             new Admin(ssubject);
-            ssubject.setState("O xristis diagrapsei ena cocktail apo tin lista");
+            ssubject.setState("O xristis diagrapse ena cocktail apo tin lista");
             
             FileWriter file = new FileWriter("src/main/resources/favorites.json");
             file.write(object.toString());

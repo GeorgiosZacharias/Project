@@ -10,5 +10,6 @@ public class Admin extends Observer{
     @Override
     public void update() {
         System.out.println( "Admin " + ssubject.getState() );
+        System.out.println("--------------------");
     }
 }
