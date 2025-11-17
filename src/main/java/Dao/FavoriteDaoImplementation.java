@@ -21,7 +21,7 @@ public class FavoriteDaoImplementation implements FavoriteDao{
     public List<String> getAllFavorites(){
         List<String> favorites = new ArrayList<>();
         try {
-            String resourceName = "D:/Json/favorites.json";
+            String resourceName = "src/main/resources/favorites.json";
             BufferedReader in = new BufferedReader(new FileReader(resourceName));
             String inputLine;
             StringBuffer response = new StringBuffer();
@@ -47,7 +47,7 @@ public class FavoriteDaoImplementation implements FavoriteDao{
     @Override
     public void createFavorite(String cocktailName, Favorite favoriteType) {
         try {
-            String resourceName = "D:/Json/favorites.json";
+            String resourceName = "src/main/resources/favorites.json";
             BufferedReader in = new BufferedReader(new FileReader(resourceName));
             String inputLine;
             StringBuffer response = new StringBuffer();
@@ -71,7 +71,7 @@ public class FavoriteDaoImplementation implements FavoriteDao{
                         favorites.put(new org.json.JSONObject("{Type of Favorite:" + favoriteType + ", Cocktail Name:" + cocktailName + "},"));
                         object.put("Favorites", favorites);
                         try {
-                            FileWriter file = new FileWriter("D:/Json/favorites.json");
+                            FileWriter file = new FileWriter("src/main/resources/favorites.json");
                             file.append(object.toString());
                             file.close();
                         } catch (IOException e) {
@@ -89,7 +89,7 @@ public class FavoriteDaoImplementation implements FavoriteDao{
                     new Admin(ssubject);
                     ssubject.setState("O xristis evale kainourgio cocktail stin lista ");
                     try {
-                        FileWriter file = new FileWriter("D:/Json/favorites.json");
+                        FileWriter file = new FileWriter("src/main/resources/favorites.json");
                         file.append(object.toString());
                         file.close();
                     } catch (IOException e) {
@@ -110,7 +110,7 @@ public class FavoriteDaoImplementation implements FavoriteDao{
 
     public void createJson() {
         try {
-            String resourceName = "D:/Json/favorites.json";
+            String resourceName = "src/main/resources/favorites.json";
             BufferedReader in = new BufferedReader(new FileReader(resourceName));
             String inputLine;
             StringBuffer response = new StringBuffer();
@@ -126,7 +126,7 @@ public class FavoriteDaoImplementation implements FavoriteDao{
                 JSONArray brackets = new JSONArray();
                 fav.put("Favorites", brackets);
                 try {
-                    FileWriter file = new FileWriter("D:/Json/favorites.json");
+                    FileWriter file = new FileWriter("src/main/resources/favorites.json");
                     file.append(fav.toString());
                     file.close();
                 } catch (IOException e) {
