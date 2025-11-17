@@ -11,75 +11,109 @@ import java.net.URL;
 
 public class CocktailDetailsRepositoryImpl implements Repository<CocktailDetails>{
 
+    private static final String API_URL_TEMPLATE = "https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
+    
+    /**
+     * HELPER METHOD: Fetches cocktail details JSON from API
+     * Returns the first (and only) drink object from the response
+     */
+    private JSONObject fetchCocktailDetailsFromAPI(int cocktailId) throws Exception {
+        String url = API_URL_TEMPLATE + cocktailId;
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'Get' requests to URL :" + url);
+        System.out.println("Response Code : " + responseCode);
+        
+        // Read response
+        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        
+        // Parse and return the first drink object
+        JSONObject object = new JSONObject(response.toString());
+        JSONArray drinks = new JSONArray(object.getJSONArray("drinks").toString());
+        return drinks.getJSONObject(0);
+    }
+    
+    /**
+     * HELPER METHOD: Safely gets a string value from JSON
+     * Avoids repeating .get().toString() everywhere
+     */
+    private String getStringValue(JSONObject json, String key) {
+        return json.get(key).toString();
+    }
+
     @Override
     public CocktailDetails getObject(int cocktailId){
         try {
-            String url = "https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=" + cocktailId;
-            URL obj = new URL(url);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'Get' requests to URL :" + url);
-            System.out.println("Response Code : " + responseCode);
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            JSONObject object=new JSONObject(response.toString());
-            JSONArray drinks=new JSONArray(object.getJSONArray("drinks").toString());
-            int id = drinks.getJSONObject(0).getInt("idDrink");
-            String name = drinks.getJSONObject(0).getString("strDrink");
-            String altName =  drinks.getJSONObject(0).get("strDrinkAlternate").toString();
-            String tags = drinks.getJSONObject(0).get("strTags").toString();
-            String video = drinks.getJSONObject(0).get("strVideo").toString();
-            String category = drinks.getJSONObject(0).get("strCategory").toString();
-            String IBA = drinks.getJSONObject(0).get("strIBA").toString();
-            String alcoholic = drinks.getJSONObject(0).get("strAlcoholic").toString();
-            String glass = drinks.getJSONObject(0).get("strGlass").toString();
-            String instructions = drinks.getJSONObject(0).get("strInstructions").toString();
-            String instructionsEs = drinks.getJSONObject(0).get("strInstructionsES").toString();
-            String instructionsDe = drinks.getJSONObject(0).get("strInstructionsDE").toString();
-            String instructionsFr = drinks.getJSONObject(0).get("strInstructionsFR").toString();
-            String instructionsIt = drinks.getJSONObject(0).get("strInstructionsIT").toString();
-            String instructionsZhHANS = drinks.getJSONObject(0).get("strInstructionsZH-HANS").toString();
-            String instructionsZhHANT = drinks.getJSONObject(0).get("strInstructionsZH-HANT").toString();
-            String image = drinks.getJSONObject(0).get("strDrinkThumb").toString();
-            String ingredient1 = drinks.getJSONObject(0).get("strIngredient1").toString();
-            String ingredient2 = drinks.getJSONObject(0).get("strIngredient2").toString();
-            String ingredient3 = drinks.getJSONObject(0).get("strIngredient3").toString();
-            String ingredient4 = drinks.getJSONObject(0).get("strIngredient4").toString();
-            String ingredient5 = drinks.getJSONObject(0).get("strIngredient5").toString();
-            String ingredient6 = drinks.getJSONObject(0).get("strIngredient6").toString();
-            String ingredient7 = drinks.getJSONObject(0).get("strIngredient7").toString();
-            String ingredient8 = drinks.getJSONObject(0).get("strIngredient8").toString();
-            String ingredient9 = drinks.getJSONObject(0).get("strIngredient9").toString();
-            String ingredient10 = drinks.getJSONObject(0).get("strIngredient10").toString();
-            String ingredient11 = drinks.getJSONObject(0).get("strIngredient11").toString();
-            String ingredient12 = drinks.getJSONObject(0).get("strIngredient12").toString();
-            String ingredient13 = drinks.getJSONObject(0).get("strIngredient13").toString();
-            String ingredient14 = drinks.getJSONObject(0).get("strIngredient14").toString();
-            String ingredient15 = drinks.getJSONObject(0).get("strIngredient15").toString();
-            String measure1 = drinks.getJSONObject(0).get("strMeasure1").toString();
-            String measure2 = drinks.getJSONObject(0).get("strMeasure2").toString();
-            String measure3 = drinks.getJSONObject(0).get("strMeasure3").toString();
-            String measure4 = drinks.getJSONObject(0).get("strMeasure4").toString();
-            String measure5 = drinks.getJSONObject(0).get("strMeasure5").toString();
-            String measure6 = drinks.getJSONObject(0).get("strMeasure6").toString();
-            String measure7 = drinks.getJSONObject(0).get("strMeasure7").toString();
-            String measure8 = drinks.getJSONObject(0).get("strMeasure8").toString();
-            String measure9 = drinks.getJSONObject(0).get("strMeasure9").toString();
-            String measure10 = drinks.getJSONObject(0).get("strMeasure10").toString();
-            String measure11 = drinks.getJSONObject(0).get("strMeasure11").toString();
-            String measure12 = drinks.getJSONObject(0).get("strMeasure12").toString();
-            String measure13 = drinks.getJSONObject(0).get("strMeasure13").toString();
-            String measure14 = drinks.getJSONObject(0).get("strMeasure14").toString();
-            String measure15 = drinks.getJSONObject(0).get("strMeasure15").toString();
-            String imageSource = drinks.getJSONObject(0).get("strImageSource").toString();
-            String imageAttribution = drinks.getJSONObject(0).get("strImageAttribution").toString();
-            String creativeCommonsConfirmed = drinks.getJSONObject(0).get("strCreativeCommonsConfirmed").toString();
-            String date = drinks.getJSONObject(0).get("dateModified").toString();
+            // Fetch the cocktail JSON (only once!)
+            JSONObject drink = fetchCocktailDetailsFromAPI(cocktailId);
+            
+            // Extract all fields - now much cleaner!
+            int id = drink.getInt("idDrink");
+            String name = drink.getString("strDrink");
+            String altName = getStringValue(drink, "strDrinkAlternate");
+            String tags = getStringValue(drink, "strTags");
+            String video = getStringValue(drink, "strVideo");
+            String category = getStringValue(drink, "strCategory");
+            String IBA = getStringValue(drink, "strIBA");
+            String alcoholic = getStringValue(drink, "strAlcoholic");
+            String glass = getStringValue(drink, "strGlass");
+            String instructions = getStringValue(drink, "strInstructions");
+            String instructionsEs = getStringValue(drink, "strInstructionsES");
+            String instructionsDe = getStringValue(drink, "strInstructionsDE");
+            String instructionsFr = getStringValue(drink, "strInstructionsFR");
+            String instructionsIt = getStringValue(drink, "strInstructionsIT");
+            String instructionsZhHANS = getStringValue(drink, "strInstructionsZH-HANS");
+            String instructionsZhHANT = getStringValue(drink, "strInstructionsZH-HANT");
+            String image = getStringValue(drink, "strDrinkThumb");
+            
+            // Ingredients
+            String ingredient1 = getStringValue(drink, "strIngredient1");
+            String ingredient2 = getStringValue(drink, "strIngredient2");
+            String ingredient3 = getStringValue(drink, "strIngredient3");
+            String ingredient4 = getStringValue(drink, "strIngredient4");
+            String ingredient5 = getStringValue(drink, "strIngredient5");
+            String ingredient6 = getStringValue(drink, "strIngredient6");
+            String ingredient7 = getStringValue(drink, "strIngredient7");
+            String ingredient8 = getStringValue(drink, "strIngredient8");
+            String ingredient9 = getStringValue(drink, "strIngredient9");
+            String ingredient10 = getStringValue(drink, "strIngredient10");
+            String ingredient11 = getStringValue(drink, "strIngredient11");
+            String ingredient12 = getStringValue(drink, "strIngredient12");
+            String ingredient13 = getStringValue(drink, "strIngredient13");
+            String ingredient14 = getStringValue(drink, "strIngredient14");
+            String ingredient15 = getStringValue(drink, "strIngredient15");
+            
+            // Measures
+            String measure1 = getStringValue(drink, "strMeasure1");
+            String measure2 = getStringValue(drink, "strMeasure2");
+            String measure3 = getStringValue(drink, "strMeasure3");
+            String measure4 = getStringValue(drink, "strMeasure4");
+            String measure5 = getStringValue(drink, "strMeasure5");
+            String measure6 = getStringValue(drink, "strMeasure6");
+            String measure7 = getStringValue(drink, "strMeasure7");
+            String measure8 = getStringValue(drink, "strMeasure8");
+            String measure9 = getStringValue(drink, "strMeasure9");
+            String measure10 = getStringValue(drink, "strMeasure10");
+            String measure11 = getStringValue(drink, "strMeasure11");
+            String measure12 = getStringValue(drink, "strMeasure12");
+            String measure13 = getStringValue(drink, "strMeasure13");
+            String measure14 = getStringValue(drink, "strMeasure14");
+            String measure15 = getStringValue(drink, "strMeasure15");
+            
+            // Metadata
+            String imageSource = getStringValue(drink, "strImageSource");
+            String imageAttribution = getStringValue(drink, "strImageAttribution");
+            String creativeCommonsConfirmed = getStringValue(drink, "strCreativeCommonsConfirmed");
+            String date = getStringValue(drink, "dateModified");
+            
+            // Create and return CocktailDetails object
             return new CocktailDetails(id,name,altName,tags,video,category,IBA,alcoholic,glass,
                     instructions,instructionsEs,instructionsDe,instructionsFr,
                     instructionsIt,instructionsZhHANS,instructionsZhHANT,image,
@@ -98,7 +132,7 @@ public class CocktailDetailsRepositoryImpl implements Repository<CocktailDetails
 
     @Override
     public void remove(CocktailDetails cocktailDetails) {
-            cocktailDetails=null;
-        }
+        cocktailDetails=null;
     }
+}
 
