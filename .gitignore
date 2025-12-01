@@ -1,0 +1,36 @@
+# Maven
+/target/
+*.log
+
+# IntelliJ IDEA
+/.idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Java
+*.class
+
+# Others
+output.jpg
+# Binary files
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.exe
+*.dll
+*.bin
+*.dat
+*.zip
+*.tar
+*.gz
+*.7z
